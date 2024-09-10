@@ -1,0 +1,33 @@
+# sbt/bsp
+.bsp
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# VSCode
+**metals*
+**bloop*
+**vscode*
+
+# Maven
+target/
+
+*.class
+
+*.log
+
+# datasets docker volume
+app-vol/datasets/nytd/*.parquet
+app-vol/datasets/nytd/*.png
+app-vol/datasets/nytd/samples/*
+
+# root .env file
+.env
+
