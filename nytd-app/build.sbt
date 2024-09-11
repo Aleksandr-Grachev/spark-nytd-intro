@@ -29,7 +29,7 @@ buildInfoKeys := Seq[BuildInfoKey](
 )
 
 buildInfoOptions += BuildInfoOption.BuildTime
-buildInfoPackage := "app.nytd.buildinfo"
+buildInfoPackage := "app"
 
 //disable publishing the main jar produced by `package`
 Compile / packageBin / publishArtifact := false
