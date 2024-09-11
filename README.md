@@ -1,12 +1,8 @@
 # Project spark-intro
 
 ## Description
-Это тестовый проект
-Проект включает в себя приложение для Apache Spark для расчета статистики по публичным наборам данных от https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page.
+Это тестовый проект. Проект включает в себя приложение для Apache Spark для расчета статистики по публичным наборам данных от [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
 
-Набор данных имеет следующую структуру:
-
-![dataset plantuml](app-vol/datasets/nytd/schema.png "NYT Datasets") TODO:impl
 
 ## Project Goals
 
@@ -29,9 +25,16 @@
     - [ ] grafana
     - [ ] db?
     - [ ] hdfs?
-- [X] Обязательно использование функций join, groupBy, agg
+- [ ] Обязательно использование функций join, groupBy, agg
 - [X] Получить fat-jar файл джобы, для запуска на кластере с помощью spark-submit
     - [X] использовать плагин sbt-assembly
+
+## Project Tasks
+
+1. Анализ популярности районов:
+    
+    Задача: Определи самые популярные районы для посадки и высадки пассажиров. Для этого можно использовать Taxi Zone IDs и подсчитать количество поездок, начинающихся и заканчивающихся в каждом районе.
+    Результат: Рейтинг районов по популярности для посадки и высадки.
 
 ## Getting started
 
@@ -40,8 +43,8 @@
 * [Docker](https://www.docker.com/)
 * [sdkman](https://sdkman.io/)
 
-### Get IMDB dataset
-Перед началом работы необходимо скачать [^1] NYT public datasets:
+### Getting NYTD dataset
+Перед началом работы необходимо скачать [^1] TLC Trip Record Data sets:
 ```shell
 >cd app-vol/datasets/nytd 
 >wget -ci datasets.urls
@@ -57,11 +60,11 @@
 
 [^1]: Проект разрабатывался на операционной системе Linux, и здесь и далее используются команды для нее.
 
-### Geting Apache Spark
+### Getting Apache Spark
 
 Если у вас не установлен Apache Spark, необходимо его [скачать](https://spark.apache.org/downloads.html) и разархивировать, к примеру в каталог `/opt/spark/`
 
-### Add your files
+### Adding your files
 Для настройки запуска приложения вы можете добавить свой собственный `.env` файл, 
 к примеру
 
@@ -77,7 +80,7 @@ JAR_VERSION=0.0.1
 SPARK_MASTER=spark://0.0.0.0:7077
 ```
 
-### Run tools
+### Running tools
 
 Находясь в корне проекта, настройте перeменные среды и запустите докер
 
@@ -91,7 +94,7 @@ SPARK_MASTER=spark://0.0.0.0:7077
 >sbt clean assembly
 ```
 
-### Test and Deploy
+### Testing and Deploying
 
 Запуск проекта происходит при помощи утилиты `spark-submit`, которая обернута скриптом `run.sh`
 
@@ -101,20 +104,19 @@ SPARK_MASTER=spark://0.0.0.0:7077
 >./run.sh
 ```
 
-Проект имеет три режима запуска 
-- Main собирает и показывает статистику по наборам данных NYTD
-- Samples - собирает samples для создания тестовых наборов данных
+Проект имеет два режима запуска 
+- Main TODO: собирает и показывает статистику по наборам данных NYTD
+- Samples - TODO: собирает samples для создания тестовых наборов данных
 
 ### Logging
 
 Приложение в своей работе использует настроки логирования через файл `log4j2.xml` в корне проекта.  Запуск тестов использует `log4j2-test.xml` в тестовых ресурсах проекта.
 
 ### Results
-
-Результаты работы проекта для режима `Main` будут отображены в консоли.
-Для режима `Samples` результаты будут сохранены в каталог `app-vol/datasets/nytd/samples`
+  
+  TODO: iml
 
 ## Conclusion
 
-Проект нуждается в вашем feedback. Пожалуйста пишите его на почту
+Проект нуждается в вашем feedback. So please create an issue. 
 Вы также можете отметить Project Goals в этом документе, которые, по вашему мнению, выполнены.
