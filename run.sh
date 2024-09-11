@@ -1,6 +1,6 @@
 #!/bin/bash
 
-app_target="imdb-app/target/scala-2.12"
+app_target="imdb-app/target/scala-2.13"
 assembly_name="spark-nytd-app-assembly"
 
 # Функция для чтения .env файла и установки переменных среды

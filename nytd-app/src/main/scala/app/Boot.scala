@@ -69,7 +69,7 @@ object Boot extends SparkSessionCreator {
               withKryo(
                 withAppName(
                   new SparkConf(),
-                  "Imdb dataset samples generation"
+                  "NYT   dataset samples generation"
                 )
               ),
               "2G"

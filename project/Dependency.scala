@@ -4,7 +4,7 @@ import sbt.librarymanagement.DependencyBuilders
 object Dependency {
 
   lazy val scalaTestLibs = {
-    lazy val scalatestVersion = "3.2.18"
+    lazy val scalatestVersion = "3.2.19"
     Seq(
       "org.scalatest" %% "scalatest" % scalatestVersion % Test
     )
@@ -35,8 +35,9 @@ object Dependency {
   }
 
   object sparkLibs {
-    val sparkV        = "3.5.1"
-    val sparkTestingV = s"${sparkV}_1.5.3"
+    val sparkV        = "3.5.2"
+    //val sparkTestingV = s"${sparkV}_1.5.3"
+    val sparkTestingV = s"3.5.1_1.5.3"
 
     lazy val sparkCoreDeps: Seq[ModuleID] =
       Seq(
