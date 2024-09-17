@@ -49,14 +49,14 @@ package object models {
   case class YellowTripData(
     Airport_fee:           Double,
     congestion_surcharge:  Double,
-    DOLocationID:          Int,
+    DOLocationID:          Long,
     extra:                 Double,
     fare_amount:           Double,
     improvement_surcharge: Double,
     mta_tax:               Double,
     passenger_count:       Long,
     payment_type:          Long,
-    PULocationID:          Int,
+    PULocationID:          Long,
     RatecodeID:            Long,
     // Rec:                   Option[Long], TODO: ???
     store_and_fwd_flag:    String,
@@ -66,7 +66,7 @@ package object models {
     tpep_dropoff_datetime: Instant,
     tpep_pickup_datetime:  Instant,
     trip_distance:         Double,
-    VendorID:              Int
+    VendorID:              Long
   )
 
 }

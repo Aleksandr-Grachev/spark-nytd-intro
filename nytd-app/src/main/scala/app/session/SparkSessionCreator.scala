@@ -22,7 +22,9 @@ trait SparkSessionCreator {
     initial: SparkConf,
     appName: String
   ): SparkConf =
-    initial.setAppName(appName)
+    initial
+      .setAppName(appName)
+  //  .set("spark.sql.parquet.enableVectorizedReader", "false")
 
   def withPerExecutorMemory(initial: SparkConf, mem: String) =
     initial.set("spark.executor.memory", mem)

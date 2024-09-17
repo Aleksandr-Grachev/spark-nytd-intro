@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.io.{ Input, Output }
 
 import java.io.{ ByteArrayInputStream, ByteArrayOutputStream }
 import com.esotericsoftware.kryo.Kryo
-import com.esotericsoftware.kryo.serializers.FieldSerializer
+//import com.esotericsoftware.kryo.serializers.FieldSerializer
 
 class MyObject() {
   var _message: String = ""
