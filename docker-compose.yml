@@ -6,7 +6,11 @@ networks:
 
 services:
   spark-master:
-    image: docker.io/bitnami/spark:3.5.1
+    image: &spark-image bitnami/spark-${SPARK_VERSION}-custom
+    build: 
+      context: .
+      args:
+        - IMG_TAG=${SPARK_VERSION}
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -19,12 +23,12 @@ services:
       - '7077:7077'
     networks:
       - spark-intro-app-network
-    volumes:
-      - ./imdb-app/target/scala-2.12/spark-nytd-app-assembly-0.0.1.jar:/opt/apps/app.jar
+    volumes: &app-volumes 
       - ./app-vol:/var/tmp/data
 
   spark-worker:
-    image: docker.io/bitnami/spark:3.5.1
+    image: *spark-image
+    build: .
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -39,8 +43,6 @@ services:
       - spark-intro-app-network
     ports:
       - '8081-8082:8081'
-    volumes:
-      - ./imdb-app/target/scala-2.12/spark-nytd-app-assembly-0.0.1.jar:/opt/apps/app.jar
-      - ./app-vol:/var/tmp/data
+    volumes: *app-volumes
     deploy:
       replicas: 2
