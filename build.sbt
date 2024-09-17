@@ -2,7 +2,7 @@ import sbtassembly.AssemblyPlugin
 
 ThisBuild / organization := "ru.neoflex"
 ThisBuild / version := "0.0.1"
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.12.20"
 
 lazy val compileSettings =
   scalacOptions ++= Seq(
