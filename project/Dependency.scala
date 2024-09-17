@@ -34,10 +34,19 @@ object Dependency {
     )
   }
 
+  object catsLibs {
+    val coreV = "2.12.0"
+
+    lazy val catsCoreDeps =
+      Seq(
+        "org.typelevel" %% "cats-core" % coreV
+      )
+  }
+
   object sparkLibs {
-    val sparkV        = "3.5.2"
+    val sparkV = "3.5.2"
     //val sparkTestingV = s"${sparkV}_1.5.3"
-    val sparkTestingV = s"3.5.1_1.5.3"
+    val sparkTestingV = s"3.5.1_1.5.3" //TODO: check for updates
 
     lazy val sparkCoreDeps: Seq[ModuleID] =
       Seq(

@@ -5,6 +5,7 @@ import Dependency._
 libraryDependencies ++= loggingLibs //.map(_ % "provided")
 libraryDependencies ++= sparkLibs.sparkCoreDeps.map(_ % "provided")
 libraryDependencies ++= scoptLibs
+libraryDependencies ++= catsLibs.catsCoreDeps
 libraryDependencies ++= pureConfigLibs
 //Tests
 libraryDependencies ++= scalaTestLibs
@@ -59,4 +60,4 @@ assembly / assemblyMergeStrategy := {
   case x => MergeStrategy.defaultMergeStrategy(x)
 }
 
-assembly / mainClass := Some("app.nytd.Boot")
+assembly / mainClass := Some("app.Boot")
