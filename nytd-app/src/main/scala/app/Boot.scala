@@ -10,6 +10,8 @@ import pureconfig.generic.auto._
 
 import scala.util.Properties
 import app.session.SparkSessionCreator
+import app.mods.NYTDStatsMod
+import org.apache.spark.sql.SparkSession
 
 object Boot extends SparkSessionCreator {
   import app.models.config._
@@ -54,14 +56,16 @@ object Boot extends SparkSessionCreator {
 
         case AppModulesEnum.Main =>
           val sparkConf: SparkConf =
-            withKryo(
-              withAppName(
-                new SparkConf,
-                mergedWithCommandLineAppCfg.name
-              )
+            // withKryo(
+            withAppName(
+              new SparkConf,
+              mergedWithCommandLineAppCfg.name
             )
+          // )
 
-          ??? //TODO:impl
+          implicit val spark: SparkSession = buildSparkSession(sparkConf)
+
+          NYTDStatsMod.run(mergedWithCommandLineAppCfg)
 
         case AppModulesEnum.Samples =>
           val sparkConf: SparkConf =
@@ -74,6 +78,9 @@ object Boot extends SparkSessionCreator {
               ),
               "2G"
             )
+
+          implicit val spark: SparkSession = buildSparkSession(sparkConf)
+
           ??? //TODO:impl
 
       }
