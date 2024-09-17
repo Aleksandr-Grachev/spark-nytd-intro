@@ -1,7 +1,5 @@
 #!/bin/bash
 
-app_target="imdb-app/target/scala-2.13"
-assembly_name="spark-nytd-app-assembly"
 
 # Функция для чтения .env файла и установки переменных среды
 load_env() {
@@ -82,6 +80,13 @@ function set_executor_params() {
 }
 
 load_env
+
+app=${APP_NAME-"nytd-app"}
+scala_version=${SCALA_VERSION-2.12}
+
+app_target="${app}/target/scala-${scala_version}"
+assembly_name="spark-${app}-assembly"
+
 check_and_prompt_variable "SPARK_HOME"
 check_and_prompt_variable "SPARK_MASTER"
 check_and_prompt_variable "JAR_VERSION"
@@ -91,6 +96,9 @@ set_driver_params
 set_executor_params
 
 echo "Using:"
+echo "app:	$app"
+echo "scala_version:	$scala_version"
+echo "assembly_name:	$assembly_name"
 echo "SPARK_HOME:     $SPARK_HOME"
 echo "SPARK_MASTER    $SPARK_MASTER"
 echo "SPARK_EXECUTOR_NUM:    $SPARK_EXECUTOR_NUM"
@@ -116,7 +124,8 @@ function run_item() {
     ${app_target}/${assembly_name}-${JAR_VERSION}.jar $@
 }
 
-choose_mod
+#choose_mod
+app_mod="Main"
 echo "Using mod:" $app_mod
 
 run_item "--mod" ${app_mod}
