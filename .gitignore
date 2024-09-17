@@ -31,3 +31,6 @@ app-vol/datasets/nytd/samples/*
 # root .env file
 .env
 
+# project docs for now
+docs
+
