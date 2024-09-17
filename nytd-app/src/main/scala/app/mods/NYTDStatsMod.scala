@@ -22,12 +22,12 @@ object NYTDStatsMod {
       NYTDataSets(datasetDir = appConfig.files.datasetDir)(spark)
 
     import nytDataSet._
-    println(s"Num partitions[${yellowTripDataDS.rdd.getNumPartitions}]")
-    yellowTripDataDS.explain()
-    yellowTripDataDS.printSchema()
+    println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
+    yellowTripDataDS_11_24.explain()
+    yellowTripDataDS_11_24.printSchema()
     //  log.warn(s"yellowTripDataDS.count[${yellowTripDataDS.count()}]")
 
-    yellowTripDataDS.show(100)
+    yellowTripDataDS_11_24.show(100)
 
   }
 
