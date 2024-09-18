@@ -32,4 +32,7 @@ trait SparkSessionCreator {
   def withShufflePartitions(inital: SparkConf, partitions: Int): SparkConf =
     inital.set("spark.sql.shuffle.partitions", partitions.toString())
 
+  def withCaseInsensitive(initial: SparkConf): SparkConf =
+    initial.set("spark.sql.caseSensitive", "false")
+
 }

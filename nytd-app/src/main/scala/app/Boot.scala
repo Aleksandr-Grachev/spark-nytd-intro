@@ -57,9 +57,11 @@ object Boot extends SparkSessionCreator {
         case AppModulesEnum.Main =>
           val sparkConf: SparkConf =
             // withKryo(
-            withAppName(
-              new SparkConf,
-              mergedWithCommandLineAppCfg.name
+            withCaseInsensitive(
+              withAppName(
+                new SparkConf,
+                mergedWithCommandLineAppCfg.name
+              )
             )
           // )
 
