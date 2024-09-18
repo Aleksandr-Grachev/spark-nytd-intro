@@ -24,9 +24,8 @@ target/
 *.log
 
 # datasets docker volume
-app-vol/datasets/nytd/*.parquet
+app-vol/datasets/nytd/**/*.parquet
 app-vol/datasets/nytd/*.png
-app-vol/datasets/nytd/samples/*
 
 # root .env file
 .env
