@@ -46,7 +46,7 @@ package object models {
     * @param trip_distance The elapsed trip distance in miles reported by the taximeter.
     * @param VendorID code indicating the TPEP provider that provided the record.
     */
-  case class YellowTripData(
+  case class YellowTripData( //2024 - 2011 years
     Airport_fee:           Double,
     congestion_surcharge:  Double,
     DOLocationID:          Long,
@@ -69,4 +69,24 @@ package object models {
     VendorID:              Long
   )
 
+  case class YellowTripData_10_09( //2010 - 2009 years
+    vendor_id:          Long,
+    pickup_datetime:    Option[Instant],
+    dropoff_datetime:   Option[Instant],
+    passenger_count:    Long,
+    trip_distance:      Double,
+    pickup_longitude:   Double,
+    pickup_latitude:    Double,
+    rate_code:          Long,
+    store_and_fwd_flag: Option[String],
+    dropoff_longitude:  Double,
+    dropoff_latitude:   Double,
+    payment_type:       Long,
+    fare_amount:        Double,
+    surcharge:          Double,
+    mta_tax:            Double,
+    tip_amount:         Double,
+    tolls_amount:       Double,
+    total_amount:       Double
+  )
 }
