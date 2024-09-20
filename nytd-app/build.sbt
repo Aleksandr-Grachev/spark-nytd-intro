@@ -6,6 +6,7 @@ libraryDependencies ++= loggingLibs //.map(_ % "provided")
 libraryDependencies ++= sparkLibs.sparkCoreDeps.map(_ % "provided")
 libraryDependencies ++= scoptLibs
 libraryDependencies ++= catsLibs.catsCoreDeps
+libraryDependencies ++= spatial4JLibs
 libraryDependencies ++= pureConfigLibs
 //Tests
 libraryDependencies ++= scalaTestLibs

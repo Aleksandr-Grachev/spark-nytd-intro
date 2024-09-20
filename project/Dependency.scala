@@ -43,6 +43,18 @@ object Dependency {
       )
   }
 
+  lazy val spatial4JLibs = {
+    val spatial4jV = "0.8"
+    val noggitV    = "0.8"
+    val jtsV       = "1.18.1"
+
+    Seq(
+      "org.locationtech.spatial4j" % "spatial4j" % spatial4jV,
+      "org.noggit"                 % "noggit"    % noggitV,
+      "org.locationtech.jts"       % "jts-core"  % jtsV
+    )
+  }
+
   object sparkLibs {
     val sparkV = "3.5.2"
     //val sparkTestingV = s"${sparkV}_1.5.3"
