@@ -43,6 +43,15 @@ object Dependency {
       )
   }
 
+  object GeoTrellisLibs {
+    val V = "3.7.1"
+
+    //see https://geotrellis.readthedocs.io/en/latest/guide/module-hierarchy.html
+    lazy val deps = Seq(
+      "org.locationtech.geotrellis" %% "geotrellis-vector" % V
+    )
+  }
+
   object sparkLibs {
     val sparkV = "3.5.2"
     //val sparkTestingV = s"${sparkV}_1.5.3"

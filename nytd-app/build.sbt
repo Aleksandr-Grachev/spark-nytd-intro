@@ -7,6 +7,7 @@ libraryDependencies ++= sparkLibs.sparkCoreDeps.map(_ % "provided")
 libraryDependencies ++= scoptLibs
 libraryDependencies ++= catsLibs.catsCoreDeps
 libraryDependencies ++= pureConfigLibs
+libraryDependencies ++= GeoTrellisLibs.deps
 //Tests
 libraryDependencies ++= scalaTestLibs
 libraryDependencies ++= sparkLibs.sparkTestLibs

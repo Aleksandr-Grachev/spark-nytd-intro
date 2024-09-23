@@ -16,7 +16,7 @@ lazy val compileSettings =
     "-Ywarn-dead-code"
   )
 
-fork in Test := true
+Test / fork := true
 
 javaOptions ++= Seq(
   "-Xms8G",
