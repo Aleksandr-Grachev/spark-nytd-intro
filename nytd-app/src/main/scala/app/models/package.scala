@@ -89,4 +89,24 @@ package object models {
     tolls_amount:       Double,
     total_amount:       Double
   )
+
+  /** Данные
+    *  features[x]->properties из файла ny_taxi_zones.geojson
+    *
+    * @param shape_area
+    * @param objectid
+    * @param shape_leng
+    * @param location_id
+    * @param zone
+    * @param borough
+    */
+  case class NyTaxiZonesGeoJsonData(
+    shape_area:  Double,
+    objectid:    Int,
+    shape_leng:  Double,
+    location_id: Int,
+    zone:        String,
+    borough:     String
+  )
+
 }
