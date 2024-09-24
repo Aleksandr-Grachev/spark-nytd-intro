@@ -1,6 +1,5 @@
 package app.datasets
 
-import cats.kernel.Monoid
 import cats.kernel.instances.double._
 import cats.kernel.instances.int._
 import cats.kernel.instances.long._
@@ -8,13 +7,15 @@ import org.apache.log4j.LogManager
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 
-final case class NYTDataSets(
+final case class YellowTaxiDatasets(
   datasetDir: String
-)(spark:      SparkSession) {
+)(spark:      SparkSession)
+    extends DatasetImplicits
+    with Pathfinder {
   import app.models._
   import spark.implicits._
 
-  import NYTDataSets._
+  import YellowTaxiDatasets._
 
   private val log = LogManager.getLogger("NYTDataSets")
 
@@ -44,7 +45,7 @@ final case class NYTDataSets(
           "2011"
         )
           .flatMap(yellowTDforYearB))
-        .map(getDatasetAbsolutePath)
+        .map(getDatasetAbsolutePathURI)
 
     paths.foreach(log.warn _)
 
@@ -78,7 +79,7 @@ final case class NYTDataSets(
         "2009"
       )
         .flatMap(yellowTDforYearB)
-        .map(getDatasetAbsolutePath)
+        .map(getDatasetAbsolutePathURI)
 
     paths.foreach(log.warn _)
 
@@ -131,65 +132,9 @@ final case class NYTDataSets(
       )
   }
 
-  def getDatasetAbsolutePath(pFileName: String) =
-    s"${datasetDir}/$pFileName"
-
 }
 
-object NYTDataSets {
-
-  implicit class DataFrameOps(frame: DataFrame) {
-
-    def withColumnOrEmpty[T: Monoid](
-      colName: String
-    ): DataFrame = {
-      val existentCols = frame.columns
-      if (existentCols.contains(colName)) {
-        frame
-      } else {
-        frame.withColumn(colName, lit(implicitly[Monoid[T]].empty))
-      }
-    }
-
-    def withColumnCast[Target: Monoid](
-      colName: String,
-      castTo:  String
-    ): DataFrame =
-      frame
-        .withColumn(
-          colName,
-          when(col(colName).isNull, lit(implicitly[Monoid[Target]].empty))
-            .otherwise(col(colName).cast(castTo))
-        )
-
-    def withColumnOptionCast(
-      colName: String,
-      castTo:  String
-    ): DataFrame =
-      frame
-        .withColumn(
-          colName,
-          when(col(colName).isNotNull, col(colName).cast(castTo))
-        )
-
-  }
-
-  def readDataFrame[R: Encoder](
-    paths:          Seq[String]
-  )(implicit spark: SparkSession): DataFrame =
-    spark.read
-      .schema(schema = implicitly[Encoder[R]].schema)
-      .option("mergeSchema", "true")
-      .parquet(paths: _*)
-
-  def readDataset[R: Encoder, T: Encoder](
-    paths: Seq[String]
-  )(f:     R => T)(implicit spark: SparkSession): Dataset[T] =
-    spark.read
-      .schema(schema = implicitly[Encoder[R]].schema)
-      .parquet(paths: _*)
-      .as[R]
-      .map(f)
+object YellowTaxiDatasets {
 
   def forYearA(dsName: String)(yyyy: String): IndexedSeq[(Int, String)] =
     12 to 1 by -1 map { i =>
