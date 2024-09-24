@@ -52,6 +52,13 @@ Global / cancelable := true
 // Assembly options for publish and publishLocal sbt tasks
 enablePlugins(AssemblyPlugin)
 
+assembly / assemblyShadeRules := Seq(
+  ShadeRule
+    .rename("org.typelevel.cats.**" -> "repackaged.org.typelevel.cats.@1")
+    .inAll,
+  ShadeRule.rename("cats.**" -> "repackaged.cats.@1").inAll
+)
+
 assembly / assemblyMergeStrategy := {
   case PathList("META-INF", "versions", "9", "module-info.class") =>
     MergeStrategy.discard
