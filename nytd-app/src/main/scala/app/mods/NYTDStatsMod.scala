@@ -14,20 +14,33 @@ object NYTDStatsMod {
   def run(appConfig: AppConfig)(implicit spark: SparkSession): Unit = {
 
     log.debug("Running NYTDStatsMod")
+  
+    //Yellow taxi
+    val yellowTaxiDatasest: YellowTaxiDatasets =
+      YellowTaxiDatasets(datasetDir = appConfig.files.datasetDir)(spark)
 
-    val nytDataSet: NYTDataSets =
-      NYTDataSets(datasetDir = appConfig.files.datasetDir)(spark)
+    import yellowTaxiDatasest._
 
-    import nytDataSet._
     // println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
     // yellowTripDataDS_11_24.explain()
     // yellowTripDataDS_11_24.printSchema()
     // yellowTripDataDS_11_24.show(100)
 
-    println(s"Num partitions[${yellowTripDataDS_10_.rdd.getNumPartitions}]")
-    yellowTripDataDS_10_.explain()
-    yellowTripDataDS_10_.printSchema()
-    yellowTripDataDS_10_.show(100)
+    // println(s"Num partitions[${yellowTripDataDS_10_.rdd.getNumPartitions}]")
+    // yellowTripDataDS_10_.explain()
+    // yellowTripDataDS_10_.printSchema()
+    // yellowTripDataDS_10_.show(100)
+
+    //Geo
+    val geoDatasets = GeoDatasets(
+      datasetDir = appConfig.files.datasetDir
+    )(spark)
+
+    import geoDatasets._
+
+    nyTaxiZonesLookup.explain()
+    nyTaxiZonesLookup.printSchema()
+    nyTaxiZonesLookup.show()
 
   }
 

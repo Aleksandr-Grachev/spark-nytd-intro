@@ -109,4 +109,19 @@ package object models {
     borough:     String
   )
 
+  /** Данные из файла taxi_zone_lookup.csv
+    *
+    * some Examples:
+    *  1,"EWR","Newark Airport","EWR"
+    *  2,"Queens","Jamaica Bay","Boro Zone"
+    *  3,"Bronx","Allerton/Pelham Gardens","Boro Zone"
+    *  4,"Manhattan","Alphabet City","Yellow Zone"
+    *  5,"Staten Island","Arden Heights","Boro Zone"
+    */
+  case class NyTaxiZonesLookup(
+    locationID:   Int,
+    borough:      String,
+    zone:         String,
+    service_zone: String
+  )
 }
