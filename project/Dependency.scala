@@ -67,6 +67,14 @@ object Dependency {
       Seq(
         "com.holdenkarau" %% "spark-testing-base" % sparkTestingV % Test
       )
+
+    lazy val awsLibs: Seq[ModuleID] =
+      Seq(
+        "org.apache.hadoop" % "hadoop-aws" % "3.3.4"
+      )
+//        aws-java-sdk-bundle-1.12.262.jar
+// -rw-rw-r-- 1 1001 root    962685 Aug 23 17:27 hadoop-aws-3.3.4.jar
+
   }
 
 }

@@ -4,6 +4,7 @@ import Dependency._
 
 libraryDependencies ++= loggingLibs //.map(_ % "provided")
 libraryDependencies ++= sparkLibs.sparkCoreDeps.map(_ % "provided")
+libraryDependencies ++= sparkLibs.awsLibs.map(_ % "provided")
 libraryDependencies ++= scoptLibs
 libraryDependencies ++= catsLibs.catsCoreDeps
 libraryDependencies ++= pureConfigLibs

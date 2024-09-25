@@ -35,4 +35,16 @@ trait SparkSessionCreator {
   def withCaseInsensitive(initial: SparkConf): SparkConf =
     initial.set("spark.sql.caseSensitive", "false")
 
+  def withS3(
+    initial:                    SparkConf,
+    endpointAccessKeyAndSecret: Option[(String, String, String)]
+  ): SparkConf =
+    endpointAccessKeyAndSecret
+      .map { case (endpoint, accessKey, secretKey) =>
+        initial.set("spark.hadoop.fs.s3a.endpoint", endpoint)
+        initial.set("spark.hadoop.fs.s3a.access.key", accessKey)
+        initial.set("spark.hadoop.fs.s3a.secret.key", secretKey)
+      }
+      .getOrElse(initial)
+
 }

@@ -6,16 +6,18 @@ import cats.kernel.instances.long._
 import org.apache.log4j.LogManager
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
+import geotrellis.vector.Point
 
-final case class YellowTaxiDatasets(
-  datasetDir: String
+final case class YellowTaxiDataset(
+  datasetDir: String,
+  geoDataset: GeoDataset
 )(spark:      SparkSession)
     extends DatasetImplicits
     with Pathfinder {
   import app.models._
   import spark.implicits._
 
-  import YellowTaxiDatasets._
+  import YellowTaxiDataset._
 
   private val log = LogManager.getLogger("NYTDataSets")
 
@@ -71,7 +73,7 @@ final case class YellowTaxiDatasets(
 
   }
 
-  lazy val yellowTripDataDS_10_ = {
+  lazy val yellowTripDataDS_10_09: Dataset[YellowTripData_10_09] = {
 
     val paths =
       Seq(
@@ -132,9 +134,80 @@ final case class YellowTaxiDatasets(
       )
   }
 
+  lazy val yellowTripDataDS_10_09_To_11_24 =
+    yellowTripDataDS_10_09.map {
+      case YellowTripData_10_09(
+            vendor_id,
+            pickup_datetime,
+            dropoff_datetime,
+            passenger_count,
+            trip_distance,
+            pickup_longitude,
+            pickup_latitude,
+            rate_code,
+            store_and_fwd_flag,
+            dropoff_longitude,
+            dropoff_latitude,
+            payment_type,
+            fare_amount,
+            surcharge,
+            mta_tax,
+            tip_amount,
+            tolls_amount,
+            total_amount
+          ) =>
+        val doLocationID: Int =
+          geoDataset.nyTaxiZones
+            .find { mPFeature =>
+              mPFeature.geom.contains(
+                Point(dropoff_longitude, dropoff_latitude)
+              )
+            }
+            .map {
+              _.data.location_id
+            }
+            .getOrElse(265) //see ny_taxi_zones_lookup, N/A location
+
+        val puLocationID: Int =
+          geoDataset.nyTaxiZones
+            .find { mPFeature =>
+              mPFeature.geom.contains(
+                Point(pickup_longitude, pickup_latitude)
+              )
+            }
+            .map {
+              _.data.location_id
+            }
+            .getOrElse(264) //see ny_taxi_zones_lookup, Unknown location
+
+        YellowTripData(
+          Airport_fee = 0.0d, //they set this field to 0.0 in old data
+          congestion_surcharge = surcharge,
+          DOLocationID = doLocationID.toLong,
+          extra =
+            0.0, //Currently, this only includes the $0.50 and $1 rush hour and overnight charges
+          fare_amount = fare_amount,
+          improvement_surcharge =
+            0.0, //the improvement surcharge began being levied in 2015
+          mta_tax = mta_tax,
+          passenger_count = passenger_count,
+          payment_type = payment_type,
+          PULocationID = puLocationID.toLong,
+          RatecodeID = rate_code, //todo:check this
+          store_and_fwd_flag = store_and_fwd_flag,
+          tip_amount = tip_amount,
+          tolls_amount = tolls_amount,
+          total_amount = total_amount,
+          tpep_dropoff_datetime = dropoff_datetime,
+          tpep_pickup_datetime = pickup_datetime,
+          trip_distance = trip_distance,
+          VendorID = vendor_id
+        )
+    }
+
 }
 
-object YellowTaxiDatasets {
+object YellowTaxiDataset {
 
   def forYearA(dsName: String)(yyyy: String): IndexedSeq[(Int, String)] =
     12 to 1 by -1 map { i =>

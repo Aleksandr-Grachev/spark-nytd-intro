@@ -1,16 +1,13 @@
 package app.datasets
 
+import geotrellis.vector.MultiPolygonFeature
 import geotrellis.vector.io.json.GeoJson
 import geotrellis.vector.io.json.JsonFeatureCollection
 import org.apache.log4j.LogManager
 import org.apache.log4j.Logger
 import org.apache.spark.sql.SparkSession
-import geotrellis.vector.MultiPolygonFeature
-import cats.kernel.instances.double._
-import cats.kernel.instances.int._
-import cats.kernel.instances.long._
 
-final case class GeoDatasets(
+final case class GeoDataset(
   datasetDir:     String
 )(implicit spark: SparkSession)
     extends DatasetImplicits
@@ -25,7 +22,7 @@ final case class GeoDatasets(
   lazy val nyTaxiZones: Vector[MultiPolygonFeature[NyTaxiZonesGeoJsonData]] =
     GeoJson
       .fromFile[JsonFeatureCollection](
-        getDatasetAbsolutePath("ny_taxi_zones.geojson")
+        getDatasetAbsolutePathURI("ny_taxi_zones.geojson")
       )
       .getAllMultiPolygonFeatures[NyTaxiZonesGeoJsonData]()
 

@@ -20,16 +20,6 @@ object Boot extends SparkSessionCreator {
 
   val log = LogManager.getLogger(Boot.getClass())
 
-  implicit val appModuleConfigReader
-    : ConfigReader[AppModulesEnum.AppModulesType] =
-    ConfigReader.fromString[AppModulesEnum.AppModulesType](
-      ConvertHelpers.catchReadError(str => AppModulesEnum.withName(s = str))
-    )
-
-  implicit val appModuleConfigWriter
-    : ConfigWriter[AppModulesEnum.AppModulesType] =
-    ConfigWriter[String].contramap[AppModulesEnum.AppModulesType](_.toString())
-
   def main(args: Array[String]): Unit = {
     logBootHeader(args)
 
@@ -56,14 +46,23 @@ object Boot extends SparkSessionCreator {
 
         case AppModulesEnum.Main =>
           val sparkConf: SparkConf =
-            // withKryo(
-            withCaseInsensitive(
-              withAppName(
-                new SparkConf,
-                mergedWithCommandLineAppCfg.name
-              )
+            withS3(
+              initial = withCaseInsensitive(
+                withAppName(
+                  new SparkConf,
+                  mergedWithCommandLineAppCfg.name
+                )
+              ),
+              endpointAccessKeyAndSecret =
+                mergedWithCommandLineAppCfg.files.s3.map {
+                  case S3Config(
+                        endpoint,
+                        accessKey,
+                        secretKey
+                      ) =>
+                    (endpoint, accessKey, secretKey)
+                }
             )
-          // )
 
           implicit val spark: SparkSession = buildSparkSession(sparkConf)
 

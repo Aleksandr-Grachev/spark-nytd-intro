@@ -59,12 +59,12 @@ package object models {
     PULocationID:          Long,
     RatecodeID:            Long,
     // Rec:                   Option[Long], TODO: ???
-    store_and_fwd_flag:    String,
+    store_and_fwd_flag:    Option[String],
     tip_amount:            Double,
     tolls_amount:          Double,
     total_amount:          Double,
-    tpep_dropoff_datetime: Instant,
-    tpep_pickup_datetime:  Instant,
+    tpep_dropoff_datetime: Option[Instant],
+    tpep_pickup_datetime:  Option[Instant],
     trip_distance:         Double,
     VendorID:              Long
   )

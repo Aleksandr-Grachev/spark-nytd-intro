@@ -122,10 +122,11 @@ function run_item() {
     --conf "spark.driver.extraJavaOptions=-Dlog4j2.configurationFile=file:log4j2.xml" \
     --conf "spark.executor.extraJavaOptions=-Dlog4j2.configurationFile=file:log4j2.xml" \
     ${app_target}/${assembly_name}-${JAR_VERSION}.jar $@
-}
+}  
 
 #choose_mod
 app_mod="Main"
 echo "Using mod:" $app_mod
 
 run_item "--mod" ${app_mod}
+

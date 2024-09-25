@@ -1,0 +1,52 @@
+version: '2'
+
+networks:
+  spark-intro-app-network:
+    name: SparkIntroAppNetwork
+
+services:
+  spark-master:
+    image: &spark-image bitnami/spark-${SPARK_VERSION}-custom
+    build:
+     context: .
+     args:
+       IMG_TAG: ${SPARK_VERSION}
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - '8080:8080'
+      - '7077:7077'
+    networks:
+      - spark-intro-app-network
+    volumes: &app-volumes 
+      - ${DATASET_VOL}:/var/tmp/data
+
+  spark-worker:
+    image: *spark-image
+    build:
+     context: .
+     args:
+      IMG_TAG: ${SPARK_VERSION}
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=12G
+      - SPARK_WORKER_CORES=6
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    networks:
+      - spark-intro-app-network
+    ports:
+      - '8081-8082:8081'
+    volumes: *app-volumes
+    deploy:
+      replicas: 2
+
