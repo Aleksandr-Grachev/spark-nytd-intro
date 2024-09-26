@@ -1,9 +1,8 @@
 package app.models
 
-import java.net.URI
 import pureconfig.ConfigReader
-import pureconfig.ConvertHelpers
 import pureconfig.ConfigWriter
+import pureconfig.ConvertHelpers
 
 package object config {
 
@@ -11,6 +10,10 @@ package object config {
     type AppModulesType = Value
 
     val Main, Samples = Value
+  }
+
+  case class Passport(value: String) {
+    override def toString: String = "*****"
   }
 
   case class AppConfig(
@@ -21,9 +24,22 @@ package object config {
 
   case class FilesConfig(datasetDir: String, s3: Option[S3Config])
 
-  case class S3Config(endpoint: String, accessKey: String, secretKey: String)
+  case class S3Config(
+    endpoint:  String,
+    accessKey: Passport,
+    secretKey: Passport
+  )
 
-  implicit val appModuleConfigReader: ConfigReader[AppModulesEnum.AppModulesType] =
+  implicit val passportConfigReader: ConfigReader[Passport] =
+    ConfigReader.fromString[Passport](
+      ConvertHelpers.catchReadError(str => Passport(str))
+    )
+
+  implicit val passportConfigWriter: ConfigWriter[Passport] =
+    ConfigWriter[String].contramap[Passport](_ => "*****")
+
+  implicit val appModuleConfigReader
+    : ConfigReader[AppModulesEnum.AppModulesType] =
     ConfigReader.fromString[AppModulesEnum.AppModulesType](
       ConvertHelpers.catchReadError(str => AppModulesEnum.withName(s = str))
     )
