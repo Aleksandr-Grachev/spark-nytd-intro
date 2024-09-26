@@ -35,15 +35,17 @@ object NYTDStatsMod {
 
     import yellowTaxiDataset._
 
-    println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
-    yellowTripDataDS_11_24.explain()
-    yellowTripDataDS_11_24.printSchema()
-    yellowTripDataDS_11_24.show(100)
+    // println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
+    // yellowTripDataDS_11_24.explain()
+    // yellowTripDataDS_11_24.printSchema()
+    // yellowTripDataDS_11_24.show(100)
 
     // println(s"Num partitions[${yellowTripDataDS_10_09.rdd.getNumPartitions}]")
     // yellowTripDataDS_10_09.explain()
     // yellowTripDataDS_10_09.printSchema()
     // yellowTripDataDS_10_09.show(100)
+
+    nyTaxiZonesBroadcast.value.foreach(m => println(m.data))
 
     // println(
     //   s"Num partitions[${yellowTripDataDS_10_09_To_11_24.rdd.getNumPartitions}]"

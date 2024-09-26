@@ -156,29 +156,32 @@ final case class YellowTaxiDataset(
             tolls_amount,
             total_amount
           ) =>
-        val doLocationID: Int =
-          geoDataset.nyTaxiZones
-            .find { mPFeature =>
-              mPFeature.geom.contains(
-                Point(dropoff_longitude, dropoff_latitude)
-              )
-            }
-            .map {
-              _.data.location_id
-            }
-            .getOrElse(265) //see ny_taxi_zones_lookup, N/A location
+        assert(
+          geoDataset.nyTaxiZones != null && geoDataset.nyTaxiZones.head != null
+        )
+        val doLocationID: Int = ???
+          // geoDataset.nyTaxiZones
+          //   .find { mPFeature =>
+          //     mPFeature.geom.contains(
+          //       Point(dropoff_longitude, dropoff_latitude)
+          //     )
+          //   }
+          //   .map {
+          //     _.data.location_id
+          //   }
+          //   .getOrElse(265) //see ny_taxi_zones_lookup, N/A location
 
-        val puLocationID: Int =
-          geoDataset.nyTaxiZones
-            .find { mPFeature =>
-              mPFeature.geom.contains(
-                Point(pickup_longitude, pickup_latitude)
-              )
-            }
-            .map {
-              _.data.location_id
-            }
-            .getOrElse(264) //see ny_taxi_zones_lookup, Unknown location
+        val puLocationID: Int = ???
+          // geoDataset.nyTaxiZones
+          //   .find { mPFeature =>
+          //     mPFeature.geom.contains(
+          //       Point(pickup_longitude, pickup_latitude)
+          //     )
+          //   }
+          //   .map {
+          //     _.data.location_id
+          //   }
+          //   .getOrElse(264) //see ny_taxi_zones_lookup, Unknown location
 
         YellowTripData(
           Airport_fee = 0.0d, //they set this field to 0.0 in old data
