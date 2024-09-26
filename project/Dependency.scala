@@ -48,7 +48,8 @@ object Dependency {
 
     //see https://geotrellis.readthedocs.io/en/latest/guide/module-hierarchy.html
     lazy val deps = Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-vector" % V
+      "org.locationtech.geotrellis" %% "geotrellis-vector" % V,
+      "org.locationtech.geotrellis" %% "geotrellis-raster" % V //only for examples
     )
   }
 
@@ -68,13 +69,12 @@ object Dependency {
         "com.holdenkarau" %% "spark-testing-base" % sparkTestingV % Test
       )
 
+    //see bitnami spark 3.5.2
     lazy val awsLibs: Seq[ModuleID] =
       Seq(
-        "org.apache.hadoop" % "hadoop-aws" % "3.3.4"
+        "org.apache.hadoop" % "hadoop-aws"          % "3.3.4",
+        "com.amazonaws"     % "aws-java-sdk-bundle" % "1.12.262"
       )
-//        aws-java-sdk-bundle-1.12.262.jar
-// -rw-rw-r-- 1 1001 root    962685 Aug 23 17:27 hadoop-aws-3.3.4.jar
-
   }
 
 }

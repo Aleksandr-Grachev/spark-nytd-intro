@@ -60,7 +60,7 @@ object Boot extends SparkSessionCreator {
                         accessKey,
                         secretKey
                       ) =>
-                    (endpoint, accessKey, secretKey)
+                    (endpoint, accessKey.value, secretKey.value)
                 }
             )
 
@@ -103,6 +103,7 @@ object Boot extends SparkSessionCreator {
   }
 
   def logBootHeader(args: Array[String]): Unit = {
+    val secrets = Seq("Key", "Password").map(_.toLowerCase())
     log.info(s"starting. {}", BuildInfo)
     log.debug(s"The application is launched with args[${args.mkString(" ")}]")
     log.debug(
@@ -111,7 +112,12 @@ object Boot extends SparkSessionCreator {
         s"javaVmVersion - ${Properties.javaVmVersion}"
     )
     for ((key, value) <- sys.env) {
-      log.debug(s"env[$key = $value]")
+      if (secrets.exists(key.toLowerCase().contains)) {
+        log.debug(s"env[$key = *****]")
+      } else {
+        log.debug(s"env[$key = $value]")
+      }
+
     }
 
   }
@@ -123,6 +129,7 @@ object Boot extends SparkSessionCreator {
         .setOriginComments(false)
         .setComments(false)
         .setFormatted(true)
+        .setShowEnvVariableValues(false)
 
     log.debug(
       s"$info[{}]",
