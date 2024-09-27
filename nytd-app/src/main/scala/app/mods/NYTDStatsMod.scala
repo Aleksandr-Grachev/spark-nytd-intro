@@ -3,6 +3,8 @@ package app.mods
 import org.apache.log4j.LogManager
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql._
+import org.apache.spark.rdd.RDD
+import app.models.YellowTripData
 
 object NYTDStatsMod {
 
@@ -29,9 +31,8 @@ object NYTDStatsMod {
     //Yellow taxi
     val yellowTaxiDataset: YellowTaxiDataset =
       YellowTaxiDataset(
-        datasetDir = appConfig.files.datasetDir,
-        geoDataset = geoDataset
-      )(spark)
+        datasetDir = appConfig.files.datasetDir
+      )(geoDataset.nyTaxiZones)(spark)
 
     import yellowTaxiDataset._
 
@@ -45,12 +46,15 @@ object NYTDStatsMod {
     // yellowTripDataDS_10_09.printSchema()
     // yellowTripDataDS_10_09.show(100)
 
-    nyTaxiZonesBroadcast.value.foreach(m => println(m.data))
+    //zones.value.foreach(zone => println(zone.data))
 
-    // println(
-    //   s"Num partitions[${yellowTripDataDS_10_09_To_11_24.rdd.getNumPartitions}]"
-    // )
-    // yellowTripDataDS_10_09_To_11_24.explain()
+    println(
+      s"Num partitions[${yellowTripDataDS_10_09_To_11_24.getNumPartitions}]"
+    )
+
+    val df: RDD[YellowTripData] = yellowTripDataDS_10_09_To_11_24
+    df.take(25).foreach(println)
+    // yellowTripDataDS_10_09_To_11_24.toDF().explain()
     // yellowTripDataDS_10_09_To_11_24.printSchema()
     // yellowTripDataDS_10_09_To_11_24.show(1000)
 

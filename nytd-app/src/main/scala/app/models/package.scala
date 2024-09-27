@@ -53,9 +53,9 @@ package object models {
     extra:                 Double,
     fare_amount:           Double,
     improvement_surcharge: Double,
-    mta_tax:               Double,
+    mta_tax:               Option[Double],
     passenger_count:       Long,
-    payment_type:          Long,
+    payment_type:          Option[Long],
     PULocationID:          Long,
     RatecodeID:            Long,
     // Rec:                   Option[Long], TODO: ???
@@ -66,11 +66,11 @@ package object models {
     tpep_dropoff_datetime: Option[Instant],
     tpep_pickup_datetime:  Option[Instant],
     trip_distance:         Double,
-    VendorID:              Long
+    VendorID:              Option[Long]
   )
 
   case class YellowTripData_10_09( //2010 - 2009 years
-    vendor_id:          Long,
+    vendor_id:          Option[Long],
     pickup_datetime:    Option[Instant],
     dropoff_datetime:   Option[Instant],
     passenger_count:    Long,
@@ -81,10 +81,10 @@ package object models {
     store_and_fwd_flag: Option[String],
     dropoff_longitude:  Double,
     dropoff_latitude:   Double,
-    payment_type:       Long,
+    payment_type:       Option[Long],
     fare_amount:        Double,
     surcharge:          Double,
-    mta_tax:            Double,
+    mta_tax:            Option[Double],
     tip_amount:         Double,
     tolls_amount:       Double,
     total_amount:       Double

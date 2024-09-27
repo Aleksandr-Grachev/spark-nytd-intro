@@ -9,7 +9,7 @@ package object config {
   object AppModulesEnum extends Enumeration {
     type AppModulesType = Value
 
-    val Main, Samples = Value
+    val Main, Samples,BroadcastExample = Value
   }
 
   case class Passport(value: String) {

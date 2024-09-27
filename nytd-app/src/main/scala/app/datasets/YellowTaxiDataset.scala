@@ -1,25 +1,25 @@
 package app.datasets
 
+import app.models.NyTaxiZonesGeoJsonData
 import cats.kernel.instances.double._
 import cats.kernel.instances.int._
 import cats.kernel.instances.long._
-import org.apache.log4j.LogManager
+import geotrellis.vector.MultiPolygonFeature
+import geotrellis.vector.Point
+import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
-import geotrellis.vector.Point
 
 final case class YellowTaxiDataset(
-  datasetDir: String,
-  geoDataset: GeoDataset
-)(spark:      SparkSession)
-    extends DatasetImplicits
+  datasetDir:  String
+)(nyTaxiZones: => Vector[MultiPolygonFeature[NyTaxiZonesGeoJsonData]])(
+  spark:       SparkSession
+) extends DatasetImplicits
     with Pathfinder {
   import app.models._
   import spark.implicits._
 
   import YellowTaxiDataset._
-
-  private val log = LogManager.getLogger("NYTDataSets")
 
   val yellowTDforYearA = forYearA("yellow_tripdata") _
 
@@ -48,8 +48,6 @@ final case class YellowTaxiDataset(
         )
           .flatMap(yellowTDforYearB))
         .map(getDatasetAbsolutePathURI)
-
-    paths.foreach(log.warn _)
 
     paths.par
       .map { path =>
@@ -82,9 +80,7 @@ final case class YellowTaxiDataset(
       )
         .flatMap(yellowTDforYearB)
         .map(getDatasetAbsolutePathURI)
-
-    paths.foreach(log.warn _)
-
+    
     paths.par
       .map { path =>
         val frame: DataFrame = spark.read.parquet(path)
@@ -134,8 +130,11 @@ final case class YellowTaxiDataset(
       )
   }
 
+  val zones: Broadcast[Vector[MultiPolygonFeature[NyTaxiZonesGeoJsonData]]] =
+    spark.sparkContext.broadcast(nyTaxiZones)
+
   lazy val yellowTripDataDS_10_09_To_11_24 =
-    yellowTripDataDS_10_09.map {
+    yellowTripDataDS_10_09.rdd.map {
       case YellowTripData_10_09(
             vendor_id,
             pickup_datetime,
@@ -156,32 +155,29 @@ final case class YellowTaxiDataset(
             tolls_amount,
             total_amount
           ) =>
-        assert(
-          geoDataset.nyTaxiZones != null && geoDataset.nyTaxiZones.head != null
-        )
-        val doLocationID: Int = ???
-          // geoDataset.nyTaxiZones
-          //   .find { mPFeature =>
-          //     mPFeature.geom.contains(
-          //       Point(dropoff_longitude, dropoff_latitude)
-          //     )
-          //   }
-          //   .map {
-          //     _.data.location_id
-          //   }
-          //   .getOrElse(265) //see ny_taxi_zones_lookup, N/A location
+        val doLocationID: Int =
+          zones.value
+            .find { mPFeature =>
+              mPFeature.geom.contains(
+                Point(dropoff_longitude, dropoff_latitude)
+              )
+            }
+            .map {
+              _.data.location_id
+            }
+            .getOrElse(265) //see ny_taxi_zones_lookup, N/A location
 
-        val puLocationID: Int = ???
-          // geoDataset.nyTaxiZones
-          //   .find { mPFeature =>
-          //     mPFeature.geom.contains(
-          //       Point(pickup_longitude, pickup_latitude)
-          //     )
-          //   }
-          //   .map {
-          //     _.data.location_id
-          //   }
-          //   .getOrElse(264) //see ny_taxi_zones_lookup, Unknown location
+        val puLocationID: Int =
+          zones.value
+            .find { mPFeature =>
+              mPFeature.geom.contains(
+                Point(pickup_longitude, pickup_latitude)
+              )
+            }
+            .map {
+              _.data.location_id
+            }
+            .getOrElse(264) //see ny_taxi_zones_lookup, Unknown location
 
         YellowTripData(
           Airport_fee = 0.0d, //they set this field to 0.0 in old data
