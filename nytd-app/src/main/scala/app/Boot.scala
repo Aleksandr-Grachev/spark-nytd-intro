@@ -12,6 +12,7 @@ import scala.util.Properties
 import app.session.SparkSessionCreator
 import app.mods.NYTDStatsMod
 import org.apache.spark.sql.SparkSession
+import app.mods.BroadcastExample
 
 object Boot extends SparkSessionCreator {
   import app.models.config._
@@ -67,6 +68,18 @@ object Boot extends SparkSessionCreator {
           implicit val spark: SparkSession = buildSparkSession(sparkConf)
 
           NYTDStatsMod.run(mergedWithCommandLineAppCfg)
+
+        case AppModulesEnum.BroadcastExample =>
+          val sparkConf: SparkConf =
+            withCaseInsensitive(
+              withAppName(
+                new SparkConf,
+                mergedWithCommandLineAppCfg.name
+              )
+            )
+
+          implicit val spark: SparkSession = buildSparkSession(sparkConf)
+          BroadcastExample.run(mergedWithCommandLineAppCfg)(spark)
 
         case AppModulesEnum.Samples =>
           val sparkConf: SparkConf =

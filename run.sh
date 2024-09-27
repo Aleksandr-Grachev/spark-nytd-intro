@@ -30,9 +30,10 @@ check_and_prompt_variable() {
 choose_mod() {
   local choice
 
-  echo "Please enter a run mode [1, 2]:"
+  echo "Please enter a run mode [1, 2, 3]:"
   echo "1) run Main"
   echo "2) run Samples"
+  echo "3) run Broadcast example"
 
   read choice
 
@@ -42,6 +43,9 @@ choose_mod() {
     ;;
   2)
     app_mod="Samples"
+    ;;
+  3)
+    app_mod="BroadcastExample"
     ;;
   *)
     echo "Invalid option selected"
@@ -124,8 +128,8 @@ function run_item() {
     ${app_target}/${assembly_name}-${JAR_VERSION}.jar $@
 }  
 
-#choose_mod
-app_mod="Main"
+choose_mod
+#app_mod="Main"
 echo "Using mod:" $app_mod
 
 run_item "--mod" ${app_mod}
