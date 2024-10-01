@@ -5,7 +5,6 @@ import cats.kernel.instances.int._
 import cats.kernel.instances.long._
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.execution.columnar.LONG
 
 final case class GreenTaxiDataset(
   datasetDir: String
@@ -16,9 +15,13 @@ final case class GreenTaxiDataset(
   import app.models._
   import spark.implicits._
 
-  val greeTDforYearA = forYearA("green_tripdata") _
+  val greeTDforYearA: String => IndexedSeq[(Int, String)] = forYearA(
+    "green_tripdata"
+  ) _
 
-  val greenTDforYearB = forYearB("green_tripdata") _
+  val greenTDforYearB: String => IndexedSeq[String] = forYearB(
+    "green_tripdata"
+  ) _
 
   lazy val greenTripData = {
 
@@ -46,19 +49,19 @@ final case class GreenTaxiDataset(
         val frame: DataFrame = spark.read.parquet(path)
 
         frame
-          .withColumnCast[Int]("RatecodeID", "int")
-          .withColumnCast[Int]("passenger_count", "int")
-          .withColumnCast[Long]("payment_type", "long")
-          .withColumnCast[Int]("trip_type", "int")
+          .withColumnOptionCast("RatecodeID", "int")
+          .withColumnOptionCast("passenger_count", "int")
+          .withColumnOptionCast("payment_type", "long")
+          .withColumnOptionCast("trip_type", "int")
 
       }
       .reduce(_ union _)
       .as[GreenTripData]
-      .filter(
-        col("lpep_pickup_datetime") < unix_timestamp(
-          lit("2014-01-02 00:00:00")
-        ).cast("timestamp")
-      )
+    // .filter( //FIXME:remove after check models
+    //   col("lpep_pickup_datetime") < unix_timestamp(
+    //     lit("2014-01-02 00:00:00")
+    //   ).cast("timestamp")
+    // )
 
   }
 

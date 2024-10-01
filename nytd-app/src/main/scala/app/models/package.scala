@@ -95,22 +95,35 @@ package object models {
     lpep_pickup_datetime:  Instant, //The date and time when the meter was engaged.
     lpep_dropoff_datetime: Instant, //The date and time when the meter was disengaged
     store_and_fwd_flag:    Option[String],
-    RatecodeID:            Long,
+    RatecodeID:            Option[Long],
     PULocationID:          Long,
     DOLocationID:          Long,
-    passenger_count:       Int,
+    passenger_count:       Option[Int],
     trip_distance:         Double,
     fare_amount:           Double,
     extra:                 Double,
     mta_tax:               Double,
     tip_amount:            Double,
     tolls_amount:          Double,
-    ehail_fee:             Double,
-    improvement_surcharge: Double,
+    ehail_fee:             Option[Double],
+    improvement_surcharge: Option[Double],
     total_amount:          Double,
     payment_type:          Option[Long],
-    trip_type:             Long,
-    congestion_surcharge:  Double
+    trip_type:             Option[Long],
+    congestion_surcharge:  Option[Double]
+  )
+
+  case class FHVTripData(
+    dispatching_base_num: String, //TLC Base License Number of the base that dispatched the trip
+    pickup_datetime:      Instant, //Date and time of the trip pick-up
+    dropOff_datetime:     Instant, //The date and time of the trip dropoff
+    PUlocationID:         Option[Long], //TLC Taxi Zone in which the trip began
+    DOlocationID:         Option[Long], //TLC Taxi Zone in which the trip ended
+    //Indicates if the trip was a part of a shared ride chain offered by a
+    //High Volume FHV company (e.g. Uber Pool, Lyft Line).
+    //for shared trips, the value is 1. For non-shared rides, this field is null.
+    SR_Flag:                Option[Int],
+    Affiliated_base_number: String
   )
 
   /** Данные
