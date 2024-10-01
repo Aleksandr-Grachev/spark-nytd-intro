@@ -19,8 +19,6 @@ final case class YellowTaxiDataset(
   import app.models._
   import spark.implicits._
 
-  import YellowTaxiDataset._
-
   val yellowTDforYearA = forYearA("yellow_tripdata") _
 
   val yellowTDforYearB = forYearB("yellow_tripdata") _
@@ -80,7 +78,7 @@ final case class YellowTaxiDataset(
       )
         .flatMap(yellowTDforYearB)
         .map(getDatasetAbsolutePathURI)
-    
+
     paths.par
       .map { path =>
         val frame: DataFrame = spark.read.parquet(path)
@@ -105,6 +103,7 @@ final case class YellowTaxiDataset(
           )
           .withColumnCast[Int]("vendor_id", "int")
           .withColumnCast[Long]("rate_code", "long")
+          .withColumnCast[Int]("passenger_count", "int")
           .withColumnOptionCast(
             "pickup_datetime",
             "timestamp"
@@ -123,11 +122,7 @@ final case class YellowTaxiDataset(
       }
       .reduce(_ union _)
       .as[YellowTripData_10_09]
-      .filter(
-        col("pickup_datetime") < unix_timestamp(
-          lit("2009-02-01 00:00:00")
-        ).cast("timestamp")
-      )
+
   }
 
   val zones: Broadcast[Vector[MultiPolygonFeature[NyTaxiZonesGeoJsonData]]] =
@@ -203,17 +198,5 @@ final case class YellowTaxiDataset(
           VendorID = vendor_id
         )
     }
-
-}
-
-object YellowTaxiDataset {
-
-  def forYearA(dsName: String)(yyyy: String): IndexedSeq[(Int, String)] =
-    12 to 1 by -1 map { i =>
-      i -> f"${dsName}_${yyyy}-$i%02d.parquet"
-    }
-
-  def forYearB(dsName: String)(yyyy: String): IndexedSeq[String] =
-    forYearA(dsName)(yyyy).map(_._2)
 
 }

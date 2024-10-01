@@ -128,8 +128,8 @@ function run_item() {
     ${app_target}/${assembly_name}-${JAR_VERSION}.jar $@
 }  
 
-choose_mod
-#app_mod="Main"
+#choose_mod
+app_mod="Main"
 echo "Using mod:" $app_mod
 
 run_item "--mod" ${app_mod}

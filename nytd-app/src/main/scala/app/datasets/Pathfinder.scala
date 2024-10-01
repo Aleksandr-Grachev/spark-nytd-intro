@@ -14,4 +14,12 @@ trait Pathfinder {
     s"${uri.getPath()}/$pFileName"
   }
 
+  def forYearA(dsName: String)(yyyy: String): IndexedSeq[(Int, String)] =
+    12 to 1 by -1 map { i =>
+      i -> f"${dsName}_${yyyy}-$i%02d.parquet"
+    }
+
+  def forYearB(dsName: String)(yyyy: String): IndexedSeq[String] =
+    forYearA(dsName)(yyyy).map(_._2)
+
 }
