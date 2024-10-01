@@ -48,15 +48,25 @@ object NYTDStatsMod {
 
     //zones.value.foreach(zone => println(zone.data))
 
-    println(
-      s"Num partitions[${yellowTripDataDS_10_09_To_11_24.getNumPartitions}]"
-    )
-
-    val df: RDD[YellowTripData] = yellowTripDataDS_10_09_To_11_24
-    df.take(25).foreach(println)
+    // println(
+    //   s"Num partitions[${yellowTripDataDS_10_09_To_11_24.getNumPartitions}]"
+    // )
+    // val df: RDD[YellowTripData] = yellowTripDataDS_10_09_To_11_24
+    // df.take(25).foreach(println)
     // yellowTripDataDS_10_09_To_11_24.toDF().explain()
     // yellowTripDataDS_10_09_To_11_24.printSchema()
     // yellowTripDataDS_10_09_To_11_24.show(1000)
+
+    val greenTripDataset: GreenTaxiDataset =
+      GreenTaxiDataset(datasetDir = appConfig.files.datasetDir)(spark)
+
+    import greenTripDataset._
+
+    println(s"Num partitions[${greenTripData.rdd.getNumPartitions}]")
+
+    greenTripData.toDF().explain()
+    greenTripData.printSchema()
+    greenTripData.show(100)
 
   }
 

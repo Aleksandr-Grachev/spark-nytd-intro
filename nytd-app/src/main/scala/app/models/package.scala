@@ -54,7 +54,7 @@ package object models {
     fare_amount:           Double,
     improvement_surcharge: Double,
     mta_tax:               Option[Double],
-    passenger_count:       Long,
+    passenger_count:       Int,
     payment_type:          Option[Long],
     PULocationID:          Long,
     RatecodeID:            Long,
@@ -73,7 +73,7 @@ package object models {
     vendor_id:          Option[Long],
     pickup_datetime:    Option[Instant],
     dropoff_datetime:   Option[Instant],
-    passenger_count:    Long,
+    passenger_count:    Int,
     trip_distance:      Double,
     pickup_longitude:   Double,
     pickup_latitude:    Double,
@@ -88,6 +88,29 @@ package object models {
     tip_amount:         Double,
     tolls_amount:       Double,
     total_amount:       Double
+  )
+
+  case class GreenTripData(
+    VendorID:              Option[Long],
+    lpep_pickup_datetime:  Instant, //The date and time when the meter was engaged.
+    lpep_dropoff_datetime: Instant, //The date and time when the meter was disengaged
+    store_and_fwd_flag:    Option[String],
+    RatecodeID:            Long,
+    PULocationID:          Long,
+    DOLocationID:          Long,
+    passenger_count:       Int,
+    trip_distance:         Double,
+    fare_amount:           Double,
+    extra:                 Double,
+    mta_tax:               Double,
+    tip_amount:            Double,
+    tolls_amount:          Double,
+    ehail_fee:             Double,
+    improvement_surcharge: Double,
+    total_amount:          Double,
+    payment_type:          Option[Long],
+    trip_type:             Long,
+    congestion_surcharge:  Double
   )
 
   /** Данные
@@ -124,4 +147,5 @@ package object models {
     zone:         String,
     service_zone: String
   )
+
 }
