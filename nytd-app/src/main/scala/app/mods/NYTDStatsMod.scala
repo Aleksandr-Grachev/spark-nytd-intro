@@ -62,11 +62,20 @@ object NYTDStatsMod {
 
     import greenTripDataset._
 
-    println(s"Num partitions[${greenTripData.rdd.getNumPartitions}]")
+    // println(s"Num partitions[${greenTripData.rdd.getNumPartitions}]")
 
-    greenTripData.toDF().explain()
-    greenTripData.printSchema()
-    greenTripData.show(100)
+    // greenTripData.toDF().explain()
+    // greenTripData.printSchema()
+    // greenTripData.show(100)
+
+    val fhvDataset =
+      FHVTaxiDataset(datasetDir = appConfig.files.datasetDir)(spark)
+    import fhvDataset._
+    println(s"Num partitions[${fhvTripData.rdd.getNumPartitions}]")
+
+    fhvTripData.toDF().explain()
+    fhvTripData.printSchema()
+    fhvTripData.show(100)
 
   }
 
