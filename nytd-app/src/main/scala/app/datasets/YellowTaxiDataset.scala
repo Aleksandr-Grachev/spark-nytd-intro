@@ -52,14 +52,14 @@ final case class YellowTaxiDataset(
         val frame: DataFrame = spark.read.parquet(path)
 
         frame
-          .withColumnOrEmpty[Long]("Rec")
+          .drop("Rec")
           .withColumnCast[Int]("passenger_count", "int")
           // .withColumnCast[Long]("Rec", "long") TODO: ???
           .withColumnCast[Double]("improvement_surcharge", "double")
           .withColumnCast[Int]("RatecodeID", "int")
 
       }
-      .reduce(_ union _)
+      .reduce(_ unionByName _)
       .as[YellowTripData]
     // .filter(
     //   col("tpep_dropoff_datetime") < unix_timestamp(
@@ -95,6 +95,7 @@ final case class YellowTaxiDataset(
               "End_Lat"               -> "dropoff_latitude",
               "Payment_Type"          -> "payment_type",
               "Rate_Code"             -> "rate_code",
+              "store_and_forward"     -> "store_and_fwd_flag",
               "Fare_Amt"              -> "fare_amount",
               "Tip_Amt"               -> "tip_amount",
               "Tolls_Amt"             -> "tolls_amount",
@@ -120,7 +121,7 @@ final case class YellowTaxiDataset(
             ).cast("long")
           )
       }
-      .reduce(_ union _)
+      .reduce(_ unionByName _)
       .as[YellowTripData_10_09]
 
   }
@@ -198,5 +199,10 @@ final case class YellowTaxiDataset(
           VendorID = vendor_id
         )
     }
+
+  lazy val yellowTripDataTotalDS: Dataset[YellowTripData] =
+    yellowTripDataDS_11_24.unionByName(
+      yellowTripDataDS_10_09_To_11_24.toDS()
+    )
 
 }

@@ -1,10 +1,9 @@
 package app.mods
 
+import app.stats.HeatMapper
 import org.apache.log4j.LogManager
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql._
-import org.apache.spark.rdd.RDD
-import app.models.YellowTripData
 
 object NYTDStatsMod {
 
@@ -17,6 +16,8 @@ object NYTDStatsMod {
 
     log.debug("Running NYTDStatsMod")
 
+    import spark.implicits._
+
     //Geo
     val geoDataset = GeoDataset(
       datasetDir = appConfig.files.datasetDir
@@ -28,7 +29,7 @@ object NYTDStatsMod {
     // nyTaxiZonesLookup.printSchema()
     // nyTaxiZonesLookup.show()
 
-    //Yellow taxi
+    //Yellow taxi trip data
     val yellowTaxiDataset: YellowTaxiDataset =
       YellowTaxiDataset(
         datasetDir = appConfig.files.datasetDir
@@ -36,14 +37,14 @@ object NYTDStatsMod {
 
     import yellowTaxiDataset._
 
-    // println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
-    // yellowTripDataDS_11_24.explain()
-    // yellowTripDataDS_11_24.printSchema()
-    // yellowTripDataDS_11_24.show(100)
+    //  println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
+//    yellowTripDataDS_11_24.explain()
+    yellowTripDataDS_11_24.printSchema()
+//    yellowTripDataDS_11_24.show(100)
 
     // println(s"Num partitions[${yellowTripDataDS_10_09.rdd.getNumPartitions}]")
     // yellowTripDataDS_10_09.explain()
-    // yellowTripDataDS_10_09.printSchema()
+    yellowTripDataDS_10_09.printSchema()
     // yellowTripDataDS_10_09.show(100)
 
     //zones.value.foreach(zone => println(zone.data))
@@ -51,12 +52,13 @@ object NYTDStatsMod {
     // println(
     //   s"Num partitions[${yellowTripDataDS_10_09_To_11_24.getNumPartitions}]"
     // )
-    // val df: RDD[YellowTripData] = yellowTripDataDS_10_09_To_11_24
-    // df.take(25).foreach(println)
-    // yellowTripDataDS_10_09_To_11_24.toDF().explain()
-    // yellowTripDataDS_10_09_To_11_24.printSchema()
-    // yellowTripDataDS_10_09_To_11_24.show(1000)
+    // yellowTripDataDS_10_09_To_11_24.toDS().explain()
+    yellowTripDataDS_10_09_To_11_24.toDS().printSchema()
+    // yellowTripDataDS_10_09_To_11_24.toDS.show(100)
 
+    yellowTripDataTotalDS.printSchema()
+
+    //Green taxi trip data
     val greenTripDataset: GreenTaxiDataset =
       GreenTaxiDataset(datasetDir = appConfig.files.datasetDir)(spark)
 
@@ -68,15 +70,27 @@ object NYTDStatsMod {
     // greenTripData.printSchema()
     // greenTripData.show(100)
 
+    //FHV trip data
     val fhvDataset =
       FHVTaxiDataset(datasetDir = appConfig.files.datasetDir)(spark)
-    import fhvDataset._
-    println(s"Num partitions[${fhvTripData.rdd.getNumPartitions}]")
+    // println(s"Num partitions[${fhvTripData.rdd.getNumPartitions}]")
 
-    fhvTripData.toDF().explain()
-    fhvTripData.printSchema()
-    fhvTripData.show(100)
+    // fhvTripData.toDF().explain()
+    // fhvTripData.printSchema()
+    // fhvTripData.show(100)
 
+    val heatMapper = new HeatMapper(
+      greenTripDataset = greenTripDataset.greenTripData,
+      yellowTripDataset = yellowTaxiDataset.yellowTripDataTotalDS,
+      fhvTripDataset = fhvDataset.fhvTripData
+    )(spark)
+
+    import heatMapper._
+
+    // println(s"Num partitions[${combinedPOLoc.rdd.getNumPartitions}]")
+    // combinedPOLoc.toDF().explain()
+    // combinedPOLoc.printSchema()
+    // combinedPOLoc.show()
   }
 
 }

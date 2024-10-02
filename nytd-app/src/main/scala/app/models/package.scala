@@ -58,7 +58,6 @@ package object models {
     payment_type:          Option[Long],
     PULocationID:          Long,
     RatecodeID:            Long,
-    // Rec:                   Option[Long], TODO: ???
     store_and_fwd_flag:    Option[String],
     tip_amount:            Double,
     tolls_amount:          Double,

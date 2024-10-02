@@ -1,10 +1,6 @@
 package app.datasets
 
-import cats.kernel.instances.double._
-import cats.kernel.instances.int._
-import cats.kernel.instances.long._
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions._
 
 final case class GreenTaxiDataset(
   datasetDir: String
