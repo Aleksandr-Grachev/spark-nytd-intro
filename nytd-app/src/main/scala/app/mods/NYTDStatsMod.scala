@@ -38,13 +38,13 @@ object NYTDStatsMod {
     import yellowTaxiDataset._
 
     //  println(s"Num partitions[${yellowTripDataDS_11_24.rdd.getNumPartitions}]")
-//    yellowTripDataDS_11_24.explain()
-    yellowTripDataDS_11_24.printSchema()
-//    yellowTripDataDS_11_24.show(100)
+    // yellowTripDataDS_11_24.explain()
+    // yellowTripDataDS_11_24.printSchema()
+    // yellowTripDataDS_11_24.show(100)
 
     // println(s"Num partitions[${yellowTripDataDS_10_09.rdd.getNumPartitions}]")
     // yellowTripDataDS_10_09.explain()
-    yellowTripDataDS_10_09.printSchema()
+    // yellowTripDataDS_10_09.printSchema()
     // yellowTripDataDS_10_09.show(100)
 
     //zones.value.foreach(zone => println(zone.data))
@@ -53,10 +53,10 @@ object NYTDStatsMod {
     //   s"Num partitions[${yellowTripDataDS_10_09_To_11_24.getNumPartitions}]"
     // )
     // yellowTripDataDS_10_09_To_11_24.toDS().explain()
-    yellowTripDataDS_10_09_To_11_24.toDS().printSchema()
+    // yellowTripDataDS_10_09_To_11_24.toDS().printSchema()
     // yellowTripDataDS_10_09_To_11_24.toDS.show(100)
 
-    yellowTripDataTotalDS.printSchema()
+    //yellowTripDataTotalDS.printSchema()
 
     //Green taxi trip data
     val greenTripDataset: GreenTaxiDataset =
@@ -87,10 +87,10 @@ object NYTDStatsMod {
 
     import heatMapper._
 
-    // println(s"Num partitions[${combinedPOLoc.rdd.getNumPartitions}]")
-    // combinedPOLoc.toDF().explain()
-    // combinedPOLoc.printSchema()
-    // combinedPOLoc.show()
+    println(s"Num partitions[${combinedPOLoc.rdd.getNumPartitions}]")
+    combinedPOLoc.explain()
+    combinedPOLoc.printSchema()
+    combinedPOLoc.show(100)
   }
 
 }
