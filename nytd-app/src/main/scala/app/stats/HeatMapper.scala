@@ -1,9 +1,15 @@
 package app.stats
 
 import org.apache.spark.sql.Dataset
-import app.models._
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+
+import app.models._
 import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.temporal.TemporalUnit
 
 class HeatMapper(
   greenTripDataset:  => Dataset[GreenTripData],
@@ -45,5 +51,27 @@ class HeatMapper(
             )
           }
         }
+      )
+
+  /** @param unit, ChronoUnit. WARN: this method supports units up to DAYS
+    * @return pair of zoneIs, passenger_count, timestamp truncated to unit
+    */
+  def passangersByZonesAnd(unit: TemporalUnit) =
+    combinedPOLoc.map { case (zoneId, passengerCount, pickupDatetime) =>
+      PassengerCountByZoneAndTime(
+        zoneId = zoneId,
+        pickupTS = pickupDatetime
+          .truncatedTo(unit),
+        passengerCount = passengerCount
+      )
+    }
+
+  def heatMapData(unit: TemporalUnit) =
+    passangersByZonesAnd(unit)
+      .groupBy(col("zoneId"), col("pickupTS"))
+      .agg(
+        Map(
+          "passengerCount" -> "sum"
+        )
       )
 }

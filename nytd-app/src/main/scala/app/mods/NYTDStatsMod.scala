@@ -4,6 +4,8 @@ import app.stats.HeatMapper
 import org.apache.log4j.LogManager
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql._
+import java.time.temporal.ChronoUnit
+
 
 object NYTDStatsMod {
 
@@ -87,10 +89,24 @@ object NYTDStatsMod {
 
     import heatMapper._
 
-    println(s"Num partitions[${combinedPOLoc.rdd.getNumPartitions}]")
-    combinedPOLoc.explain()
-    combinedPOLoc.printSchema()
-    combinedPOLoc.show(100)
+    // println(s"Num partitions[${combinedPOLoc.rdd.getNumPartitions}]")
+    // combinedPOLoc.explain()
+    // combinedPOLoc.printSchema()
+    // combinedPOLoc.show(100)
+
+    lazy val passangersByZonesAnHour = passangersByZonesAnd(ChronoUnit.DAYS)
+    // println(s"Num partitions[${passangersByZonesAnHour.rdd.getNumPartitions}]")
+    // passangersByZonesAnHour.explain()
+    // passangersByZonesAnHour.printSchema()
+    // passangersByZonesAnHour.show(100)
+
+    lazy val heatMapDataByDays = heatMapData(ChronoUnit.DAYS)
+
+    println(s"Num partitions[${heatMapDataByDays.rdd.getNumPartitions}]")
+    heatMapDataByDays.explain()
+    heatMapDataByDays.printSchema()
+    heatMapDataByDays.show(100)
+
   }
 
 }

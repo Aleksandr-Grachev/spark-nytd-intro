@@ -125,6 +125,12 @@ package object models {
     Affiliated_base_number: String
   )
 
+  case class PassengerCountByZoneAndTime(
+    zoneId:         Long,
+    pickupTS: Instant,
+    passengerCount: Int
+  )
+
   /** Данные
     *  features[x]->properties из файла ny_taxi_zones.geojson
     *
