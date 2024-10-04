@@ -53,9 +53,11 @@ final case class YellowTaxiDataset(
 
         frame
           .drop("Rec")
+          .withColumnCast[Double]("Airport_fee", "double")
           .withColumnCast[Int]("passenger_count", "int")
           // .withColumnCast[Long]("Rec", "long") TODO: ???
           .withColumnCast[Double]("improvement_surcharge", "double")
+          .withColumnCast[Double]("congestion_surcharge", "double")
           .withColumnCast[Int]("RatecodeID", "int")
 
       }
@@ -102,6 +104,8 @@ final case class YellowTaxiDataset(
               "Total_Amt"             -> "total_amount"
             )
           )
+          .withColumnCast[Double]("dropoff_longitude", "double")
+          .withColumnCast[Double]("dropoff_latitude", "double")
           .withColumnCast[Int]("vendor_id", "int")
           .withColumnCast[Long]("rate_code", "long")
           .withColumnCast[Int]("passenger_count", "int")
